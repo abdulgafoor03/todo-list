@@ -6,56 +6,16 @@ import ItemList from "./components/ItemList";
 import SideBar from "./components/SideBar";
 import Logo from "./components/Logo";
 import Counter from "./components/Counter";
-import { useEffect, useState } from "react";
-import { DefaultList } from "../src/resources/defaultList";
+import { useEffect } from "react";
+import { useSelector } from "react-redux";
+import { getItemSelector } from "./redux/toDoSlice";
 
 function App() {
-  const [list, setList] = useState(() => {
-    return JSON.parse(localStorage.getItem("items")) || DefaultList;
-  });
+  const items=useSelector(getItemSelector);
 
-  const handleAddItem = (itemText) => {
-    const newItem = {
-      id: new Date().getTime(),
-      name: itemText,
-      packed: false,
-    };
-    setList([...list, newItem]);
-  };
-  const handleRemoveAllItems = () => {
-    setList([]);
-  };
-  const handleResetAllInitials = () => {
-    setList(DefaultList);
-  };
-  const handleAllMarkComplete = () => {
-    const newItem = list.map((li) => {
-      return { ...li, packed: true };
-    });
-    setList(newItem);
-  };
-  const handleAllMarkInComplete = () => {
-    const newItem = list.map((li) => {
-      return { ...li, packed: false };
-    });
-    setList(newItem);
-  };
-  const handleDeleteItem = (id) => {
-    const newItem = list.filter((li) => li.id !== id);
-    setList(newItem);
-  };
-  const handleSelectedItem = (id) => {
-    const newItem = list.map((li) => {
-      if (li.id == id) {
-        return { ...li, packed: !li.packed };
-      }
-      return li;
-    });
-    setList(newItem);
-  };
   useEffect(() => {
-    localStorage.setItem("items", JSON.stringify(list));
-  }, [list]);
+    localStorage.setItem("items", JSON.stringify(items));
+  }, [items]);
 
   
 
@@ -66,26 +26,16 @@ function App() {
         <Header>
           <Logo />
           <Counter
-            totalNumberOfItems={list.length}
+            totalNumberOfItems={items.length}
             numberOfItemsPacked={
-              list.filter((li) => {
+              items.filter((li) => {
                 return li.packed;
               }).length
             }
           />
         </Header>
-        <ItemList
-          list={list}
-          handleDeleteItem={handleDeleteItem}
-          handleSelectedItem={handleSelectedItem}
-        />
-        <SideBar
-          handleAddItem={handleAddItem}
-          handleRemoveAllItems={handleRemoveAllItems}
-          handleResetAllInitials={handleResetAllInitials}
-          handleAllMarkComplete={handleAllMarkComplete}
-          handleAllMarkInComplete={handleAllMarkInComplete}
-        />
+        <ItemList list={items} />
+        <SideBar/>
       </main>
 
       <Footer />

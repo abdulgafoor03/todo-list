@@ -1,6 +1,8 @@
 import EmptyView from "./EmptyVIew";
 import Select from "react-select";
 import { useMemo, useState } from "react";
+import { useDispatch } from "react-redux";
+import { handleDelete,handleSelected } from "../redux/toDoSlice";
 
 const sortingOptions = [
   { label: "Sort by default", value: "default" },
@@ -10,8 +12,6 @@ const sortingOptions = [
 
 export default function ItemList({
   list,
-  handleDeleteItem,
-  handleSelectedItem,
 }) {
   const [sortBy, setSortBy] = useState("default");
   const sortedItem = useMemo(() => 
@@ -43,22 +43,21 @@ export default function ItemList({
           <Item
             key={i}
             item={item}
-            handleDeleteItem={handleDeleteItem}
-            handleSelectedItem={handleSelectedItem}
           />
         );
       })}
     </ul>
   );
 }
-const Item = ({ item, handleDeleteItem, handleSelectedItem }) => {
+const Item = ({ item }) => {
+  const dispatch =useDispatch();
   return (
     <li className="item">
-      <label onClick={() => handleSelectedItem(item.id)}>
+      <label onClick={() => dispatch(handleSelected(item.id))}>
         <input type="checkbox" checked={item.packed}></input>
         {item.name}
       </label>
-      <button onClick={() => handleDeleteItem(item.id)}>❌</button>
+      <button onClick={()=>dispatch(handleDelete(item.id))}>❌</button>
     </li>
   );
 };

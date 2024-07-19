@@ -4,19 +4,19 @@ import Button from "./Button";
 import ButtonGroup from "./ButtonGroup";
 
 
-export default function SideBar({handleAddItem,handleRemoveAllItems,handleResetAllInitials,handleAllMarkComplete,handleAllMarkInComplete}) {
+export default function SideBar() {
   const btnGroup = [
-    { text: "Mark all as complete",onClick:handleAllMarkComplete },
-    { text: "Mark all as incomplete",onClick:handleAllMarkInComplete },
-    { text: "Reset as inital" ,onClick:handleResetAllInitials},
-    { text: "Remove all items",onClick:handleRemoveAllItems },
+    { text: "Mark all as complete",id:"markAll"},
+    { text: "Mark all as incomplete",id:'unMarkAll' },
+    { text: "Reset as inital",id:'resetInital' },
+    { text: "Remove all items",id:'removeAll'},
   ]; 
   return (
     <div className="sidebar">
-      <AddAnItem handleAddItem={handleAddItem}/>
+      <AddAnItem />
       <ButtonGroup>
         {btnGroup.map((btn,i)=>{
-           return ( <Button key={i+btn.text} text={btn.text} buttonType='secondary' onClick={btn.onClick}/>)
+           return ( <Button key={i+btn.text} text={btn.text} buttonType='secondary' id={btn.id}/>)
         })}
       </ButtonGroup>
     </div>
